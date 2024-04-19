@@ -209,7 +209,10 @@ svg {
 	height: 100%;
 }
 
-
+.error-message {
+    font-size: 15px !important; /* Add !important to override other rules */
+    color: red;
+}
 
 @media screen and (max-width: 600px){
 	main {

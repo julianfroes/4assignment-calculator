@@ -6,12 +6,16 @@ const main = {
     numerate: '0',
     indexing:0,
     block: false,
+
     add: (a, b) => a + b,
     subtract: (a, b) => a - b,
     multiply: (a, b) => a * b,
     divide: (a, b) => {
+        // Check if dividing by 0
         if (b === 0) {
-            document.getElementById('result').value = "Cannot divide by zero";
+            const errorMessageDiv = document.getElementById('output');
+            errorMessageDiv.innerHTML = "Cannot divide by zero";
+            errorMessageDiv.classList.add("error-message"); // Add a class to style the error message
             throw new Error('Division by zero');
         }
         return a / b;
@@ -20,19 +24,39 @@ const main = {
         return a % b;
     },
     operate(operator, a, b) {
+        let result;
         switch (operator) {
             case '+':
-                return this.add(a, b);
+                result = this.add(a, b);
+                break;
             case '-':
-                return this.subtract(a, b);
+                result = this.subtract(a, b);
+                break;
             case '*':
-                return this.multiply(a, b);
+                result = this.multiply(a, b);
+                break;
             case '/':
-                return this.divide(a, b);
+                result = this.divide(a, b);
+                break;
             case '%':
-                return this.mod(a,b);
+                result = this.mod(a, b);
+                break;
             default:
                 return NaN;
+        }
+        
+        // Round the result
+        const roundedResult = this.roundResult(result, 10); 
+        
+        return roundedResult;
+    },
+    
+    roundResult(result, decimalPlaces) {
+        // Check if the result is not NaN and is a finite number
+        if (!isNaN(result) && isFinite(result)) {
+            return Number(result.toFixed(decimalPlaces));
+        } else {
+            return NaN;
         }
     },
     validateInput(value) {
@@ -55,7 +79,6 @@ const main = {
         if (this.SYMBOLS.includes(value)) return;
 
         if (value === '.') {
-            // Check if the existing number already contains a decimal point
             const lastNumber = this.result[this.indexing].toString();
 
             if (lastNumber.includes('.')) {
@@ -64,25 +87,21 @@ const main = {
             }
         } 
         this.numerate += value;
+
          // Remove leading zeros only if the number doesn't start with '0.'
         if (!this.numerate.startsWith('0.') && !this.numerate.startsWith('.') ) {
             //if 025 -> 25 | 00 -> 0 | 0 -> 0
             
             if(this.numerate.length >1){
                 let temp = this.numerate.split('');
-                 // Remove leading zeros except for a single zero
                 while (temp.length > 1 && temp[0] === '0') {
                     temp.shift();
                 }
-
-                // Join the filtered array back into a string
                 this.numerate = temp.join('');
             }          
         }
         
-         // Update the last element of the result array with the modified number
-         this.result[this.indexing] = this.numerate;
-         
+         this.result[this.indexing] = this.numerate;         
     },
     operationsCheck(value){
         if (!this.SYMBOLS.includes(value)) return;       
@@ -91,10 +110,8 @@ const main = {
         if(this.result.length > 3){
             this.reduceOperations();            
         }
-         //reset numerate to start a new number composition
          this.numerate='0';
          this.indexing+=2;
-
     },
     reasonOfTwo(){
         const num1 = parseFloat(this.result[this.indexing - 2]);
@@ -105,7 +122,7 @@ const main = {
         console.log('operator', operator)
         return this.operate(operator, num1, num2);
     },
-    reduceOperations(){;
+    reduceOperations(){
         //proceed to operate 2 numbers
         const tempOperation = this.result.pop();
         try {
@@ -121,8 +138,8 @@ const main = {
     },
     addValue(value) {
         if (!this.validateInput(value)) return;
-        this.concatenateNumber(value);   
-        this.operationsCheck(value);
+        this.concatenateNumber(value);       
+         this.operationsCheck(value);
 
          //display values
          this.displayResult();
@@ -135,10 +152,12 @@ const main = {
     lastNumberType(){
         const lastIndex = this.result.findLastIndex((element) => !this.SYMBOLS.includes(element));
 
-        // If a number is found, return it, otherwise return null, it doesn't suppose to pass here
+        // it doesn't suppose to pass here
         return lastIndex !== -1 ? this.result[lastIndex] : null;
     },
     clearDisplay() {
+        const outputDiv = document.getElementById('output');
+        outputDiv.classList.remove("error-message"); // Remove the error message class
         this.result=[];
         this.numerate="0";
         this.indexing=0;
@@ -189,7 +208,6 @@ const main = {
         }
     },
     toggleValue(){
-        // Check if the last element in the result is a number
         const lastNumber = parseFloat(this.result[this.result.length - 1]);
         if (!isNaN(lastNumber) && lastNumber !== 0) {
             this.result[this.result.length - 1] = (lastNumber * -1).toString();
@@ -203,6 +221,7 @@ const main = {
 
     calculate() {
         if(this.result.length === 3){
+            console.log("calculate check ", this.result)
             let total = this.reasonOfTwo();
              //reset indexing
             // Update the result array with the result of the previous operation and the new operator
@@ -221,7 +240,7 @@ const main = {
 
 document.querySelectorAll('button').forEach(button => {
     button.addEventListener('click', event => {
-        event.stopPropagation(); 
+        event.stopPropagation();
     });
 });
 main.sentinel();

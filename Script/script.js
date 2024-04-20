@@ -1,3 +1,4 @@
+
 const main = {
     SYMBOLS: ['/', '*', '-', '+','%'],
     decimalPoint: '.',
@@ -11,11 +12,12 @@ const main = {
     subtract: (a, b) => a - b,
     multiply: (a, b) => a * b,
     divide: (a, b) => {
-        // Check if dividing by 0
-        if (b === 0) {
+        // Check if dividing by 0, block keyboard
+        if (b === 0 && !main.block) {
             const errorMessageDiv = document.getElementById('output');
             errorMessageDiv.innerHTML = "Cannot divide by zero";
             errorMessageDiv.classList.add("error-message"); // Add a class to style the error message
+            main.block = true; // Set the block flag to true
             throw new Error('Division by zero');
         }
         return a / b;
@@ -162,6 +164,7 @@ const main = {
         this.numerate="0";
         this.indexing=0;
         this.sentinel();
+        this.block=false;
     },
     backspace() {
         const lastElement = this.result[this.result.length - 1];
@@ -242,5 +245,20 @@ document.querySelectorAll('button').forEach(button => {
     button.addEventListener('click', event => {
         event.stopPropagation();
     });
+});
+
+//keyboard support
+
+document.addEventListener('keydown', function(event) {
+    const key = event.key;
+    if (!isNaN(key) || key === '.' || key === '+' || key === '-' || key === '*' || key === '/') {
+        main.addValue(key);
+    } else if (key === 'Enter') {
+        main.calculate();
+    } else if (key === 'Backspace') {
+        main.backspace();
+    } else if (key === 'Escape') {
+        main.clearDisplay();
+    }
 });
 main.sentinel();

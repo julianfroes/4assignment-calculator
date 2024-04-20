@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KreativeCal</title>
-    <link rel="stylesheet" href="./Style/styles.css">
+    <link rel="stylesheet" href="./style/styles.css">
 </head>
-<body>
     <body >
         <main>
             <div id="screen">
@@ -40,7 +39,22 @@
             <svg viewBox="0 0 24 24">
                 <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" style="fill:currentColor;"/>
             </svg>
-        </button>   
+        </button> 
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Hello there!,<br>
+                   Welcome to KreativeStorm's special calculator for pairs of numbers!
+                   It provides:</p>
+                <ol>
+                    <li>Elemental Mathematical Operations on two numbers</li>
+                    <li>Use backspace to delete number</li>
+                    <li>Use clear button for display clearance</li>
+                    <li>Keyboard support</li>
+                </ol>
+            </div>
+        </div>
         <script src="./script/script.js"></script>
+        <script src="./script/modal.js"></script>
     </body>
-    </html>
+</html>

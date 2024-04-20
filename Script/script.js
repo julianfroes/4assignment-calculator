@@ -203,11 +203,13 @@ const main = {
     
     updateResultAndNumerate(temp) {
         this.result[this.result.length - 1] = temp;
-    
+        this.numerate=temp;
         if (temp.length === 0) {
+            console.log('temp numerate ', temp)
             this.result.pop();
             this.indexing = 0;
             this.numerate = '0';
+            this.result = [this.defaultValue];
         }
     },
     toggleValue(){

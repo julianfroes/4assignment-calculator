@@ -7,18 +7,16 @@ const main = {
     numerate: '0',
     indexing:0,
     block: false,
-
     add: (a, b) => a + b,
     subtract: (a, b) => a - b,
     multiply: (a, b) => a * b,
     divide: (a, b) => {
-        // Check if dividing by 0, block keyboard
         if (b === 0 && !main.block) {
             const errorMessageDiv = document.getElementById('output');
             errorMessageDiv.innerHTML = "Cannot divide by zero";
-            errorMessageDiv.classList.add("error-message"); // Add a class to style the error message
-            main.block = true; // Set the block flag to true
-            throw new Error('Division by zero');
+            errorMessageDiv.classList.add("error-message"); 
+            main.block = true; 
+            // throw new Error('Division by zero');
         }
         return a / b;
     },
@@ -47,14 +45,11 @@ const main = {
                 return NaN;
         }
         
-        // Round the result
-        const roundedResult = this.roundResult(result, 10); 
-        
+        const roundedResult = this.roundResult(result, 3);         
         return roundedResult;
     },
     
     roundResult(result, decimalPlaces) {
-        // Check if the result is not NaN and is a finite number
         if (!isNaN(result) && isFinite(result)) {
             return Number(result.toFixed(decimalPlaces));
         } else {
@@ -92,8 +87,7 @@ const main = {
 
          // Remove leading zeros only if the number doesn't start with '0.'
         if (!this.numerate.startsWith('0.') && !this.numerate.startsWith('.') ) {
-            //if 025 -> 25 | 00 -> 0 | 0 -> 0
-            
+            //if 025 -> 25 | 00 -> 0 | 0 -> 0            
             if(this.numerate.length >1){
                 let temp = this.numerate.split('');
                 while (temp.length > 1 && temp[0] === '0') {
@@ -117,11 +111,8 @@ const main = {
     },
     reasonOfTwo(){
         const num1 = parseFloat(this.result[this.indexing - 2]);
-        console.log('num1', num1)
         const num2 = parseFloat(this.result[this.indexing]);
-        console.log('num2', num2)
         const operator = this.result[this.indexing - 1];
-        console.log('operator', operator)
         return this.operate(operator, num1, num2);
     },
     reduceOperations(){
@@ -132,7 +123,6 @@ const main = {
             let total = this.reasonOfTwo();
             this.result = [total, tempOperation];
             this.indexing = 0;
-            // this.numerate = '0';//?
             this.numerate = total;
         } catch (error) {
             console.error('Error during reduce operation:', error.message);
@@ -147,7 +137,6 @@ const main = {
          this.displayResult();
     },
     displayResult(){
-        // console.log('DISPLAY INDEXING', this.indexing)
         document.getElementById('input').innerHTML = this.result.join('');
         document.getElementById('output').innerHTML = this.lastNumberType();
     },
@@ -159,7 +148,7 @@ const main = {
     },
     clearDisplay() {
         const outputDiv = document.getElementById('output');
-        outputDiv.classList.remove("error-message"); // Remove the error message class
+        outputDiv.classList.remove("error-message");
         this.result=[];
         this.numerate="0";
         this.indexing=0;
@@ -205,7 +194,6 @@ const main = {
         this.result[this.result.length - 1] = temp;
         this.numerate=temp;
         if (temp.length === 0) {
-            console.log('temp numerate ', temp)
             this.result.pop();
             this.indexing = 0;
             this.numerate = '0';
@@ -216,20 +204,13 @@ const main = {
         const lastNumber = parseFloat(this.result[this.result.length - 1]);
         if (!isNaN(lastNumber) && lastNumber !== 0) {
             this.result[this.result.length - 1] = (lastNumber * -1).toString();
-            // Update the display
+          
             this.displayResult();
         }
     },
-    makeSpecialCalculation() {
-        // In case
-    },
-
     calculate() {
         if(this.result.length === 3){
-            console.log("calculate check ", this.result)
             let total = this.reasonOfTwo();
-             //reset indexing
-            // Update the result array with the result of the previous operation and the new operator
             this.result = [total];
             this.indexing = 0;
             this.numerate =total.toString();//?
@@ -250,7 +231,6 @@ document.querySelectorAll('button').forEach(button => {
 });
 
 //keyboard support
-
 document.addEventListener('keydown', function(event) {
     const key = event.key;
     if (!isNaN(key) || key === '.' || key === '+' || key === '-' || key === '*' || key === '/') {
